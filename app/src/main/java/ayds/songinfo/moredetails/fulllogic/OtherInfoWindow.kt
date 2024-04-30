@@ -132,17 +132,27 @@ class OtherInfoWindow : Activity() {
 
     private fun updateUi (artistBiography: ArtistBiography){
         runOnUiThread {
-
-            openButtonArticle.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.setData(Uri.parse(artistBiography.articleUrl))
-                startActivity(intent)
-            }
-
-            Picasso.get().load(LASTFM_IMAGE_URL).into(   lastFMImage  )
-            val text = artistBiography.biography.replace("\\n", "\n")
-            articleTextPane.text = Html.fromHtml(textToHtml(text, artistBiography.artistName))
+            updateButtonArticle(artistBiography.articleUrl)
+            updateLogoLastFM()
+            updateArticleText(artistBiography)
         }
+    }
+
+    private fun updateButtonArticle(articleUrl: String){
+        openButtonArticle.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse(articleUrl))
+            startActivity(intent)
+        }
+    }
+
+    private fun updateLogoLastFM(){
+        Picasso.get().load(LASTFM_IMAGE_URL).into(   lastFMImage  )
+    }
+
+    private fun updateArticleText(artistBiography: ArtistBiography){
+        val text = artistBiography.biography.replace("\\n", "\n")
+        articleTextPane.text = Html.fromHtml(textToHtml(text, artistBiography.artistName))
     }
 
     private fun textToHtml(text: String, term: String?): String {
