@@ -5,8 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,35 +13,32 @@ import ayds.songinfo.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.Locale
 
 private const val LASTFM_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+private const val LASTFM_URL = "https://ws.audioscrobbler.com/2.0/"
+private const val ARTICLE_DATABASE_NAME = "database-name-thename"
 data class ArtistBiography(val artistName: String, val biography: String, val articleUrl: String)
 class OtherInfoWindow : Activity() {
 
     private lateinit var articleTextPane: TextView
     private lateinit var openButtonArticle : Button
-
+    private lateinit var lastFMImage : ImageView
     private lateinit var articleDataBase: ArticleDatabase
     private lateinit var retrofit : Retrofit
     private lateinit var lastFMAPI: LastFMAPI
-    private lateinit var lastFMImage : ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
 
         initProperties()
         initDataBase()
-
-        initRetrofit()
         initLastFM()
-
-        //dejar open solo y la funcion que esta ahi de llamada, moverla adentro de open.
-        open()
+        getArtistInfoAsync()
     }
 
     private fun initProperties(){
@@ -53,42 +48,38 @@ class OtherInfoWindow : Activity() {
     }
     private fun initRetrofit(){
        retrofit = Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .baseUrl( LASTFM_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
     }
 
     private fun initLastFM(){
+        initRetrofit()
         lastFMAPI = retrofit.create(LastFMAPI::class.java)
-    }
-
-    private fun open() {
-
-        var artist = intent.getStringExtra("artistName")
-        //open quedaria con solo esta funcion. Como es privada, no tiene sentido que sea unanfuncion que solo llame a otra. si fuese publica si. Termino eliminnando open, y muevo get a onCreate.
-        if (artist != null) {
-            getArtistInfoAsync(artist)
-        }
     }
 
     private fun initDataBase(){
        articleDataBase =
-            databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
+            databaseBuilder(this, ArticleDatabase::class.java, ARTICLE_DATABASE_NAME ).build()
     }
-    private fun getArtistInfoAsync(artistName: String) {
-        Thread { // disparar un thread es un nivel de abstraccion. Creo que una funcion que tenga ese thread y que llame a get . entonces todo lo de abajo la muevo a otra funcion get.
-             getArtistInfo(artistName)
+    private fun getArtistInfoAsync() {
+        val artist = getArtistName()
+        Thread {
+            if (artist != null) {
+                getArtistInfo(artist)
+            }
         }.start()
     }
 
-    private fun getArtistInfo(artistName: String){
+    private fun getArtistName () = intent.getStringExtra(ARTIST_NAME_EXTRA)
 
-        var article = getArtistFromRepository(artistName)
+    private fun getArtistInfo(artistName: String){
+        val article = getArtistFromRepository(artistName)
         updateUi(article)
     }
 
     private fun getArtistFromRepository(artistName: String): ArtistBiography{
-       var article = getArticleFromDataBase(artistName)
+       val article = getArticleFromDataBase(artistName)
        val artistBiography: ArtistBiography
 
         if(article != null ){
@@ -130,14 +121,7 @@ class OtherInfoWindow : Activity() {
         val bio = artist["bio"].getAsJsonObject()
         val extract = bio["content"]
         val url = artist["url"]
-        var text =""
-
-        if (extract == null) {
-            text = "No Results"
-        } else {
-            text = extract.asString.replace("\\n", "\n")
-        }
-
+        val text = extract?.asString?.replace("\\n", "\n") ?: "No Results"
         return ArtistBiography(artistName, text, url.asString)
     }
     private fun getArtistInfoFromService(artistName: String) = lastFMAPI.getArtistInfo(artistName).execute()
@@ -179,8 +163,6 @@ class OtherInfoWindow : Activity() {
 
 
     companion object {
-        //es un smell porque mas arrina no uso la const . se pone directamnete artistName
         const val ARTIST_NAME_EXTRA = "artistName"
-
     }
 }
