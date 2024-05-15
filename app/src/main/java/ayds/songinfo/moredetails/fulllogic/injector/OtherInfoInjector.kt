@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.data.external.LastFMAPI
-import ayds.songinfo.moredetails.fulllogic.data.external.LastFMToArtistBiographyResolver
 import ayds.songinfo.moredetails.fulllogic.data.external.LastFMToArtistBiographyResolverImpl
 import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoServiceImpl
 import ayds.songinfo.moredetails.fulllogic.data.localdb.ArticleDatabase
