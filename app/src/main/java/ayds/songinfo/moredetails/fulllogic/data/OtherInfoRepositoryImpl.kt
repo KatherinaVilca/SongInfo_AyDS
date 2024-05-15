@@ -15,7 +15,8 @@ class OtherInfoRepositoryImpl (
         val artistBiography: ArtistBiography
 
         if(article != null ){
-            artistBiography = article.markArticleAsLocal()
+            markArticleAsLocal(article)
+            artistBiography = article
         }
         else {
             artistBiography = otherInfoService.getArtist(artistName)
@@ -26,6 +27,8 @@ class OtherInfoRepositoryImpl (
         return artistBiography
     }
 
-    private fun ArtistBiography.markArticleAsLocal() = copy(biography = "[*] $biography")
+    private fun markArticleAsLocal(article :ArtistBiography) {
+        article.isLocallyStorage=true
+    }
 
 }
