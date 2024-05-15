@@ -4,7 +4,7 @@ package ayds.songinfo.moredetails.fulllogic.data.localdb
 import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
 
 interface OtherInfoLocalStorage {
-    fun getArticle(artisName: String): ArtistBiography?
+    fun getArticle(artistName: String): ArtistBiography?
     fun insertArtist(artistBiography: ArtistBiography)
 }
 
