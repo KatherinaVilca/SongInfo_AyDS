@@ -27,8 +27,8 @@ class OtherInfoRepositoryImpl (
         return artistBiography
     }
 
-    private fun markArticleAsLocal(article :ArtistBiography) {
-        article.isLocallyStorage=true
+    private fun markArticleAsLocal(article: ArtistBiography) {
+        article.isLocallyStorage = true
     }
 
 }

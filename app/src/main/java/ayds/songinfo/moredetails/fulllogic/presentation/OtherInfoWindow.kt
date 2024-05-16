@@ -35,13 +35,11 @@ class OtherInfoWindow : Activity() {
         lastFMImage = findViewById(R.id.lastFMImage)
     }
 
-    //preguntar
     private fun initPresenter(){
        OtherInfoInjector.init(this)
         otherInfoPresenter = OtherInfoInjector.presenter
     }
 
-    //Preg
     private fun observerPresenter(){
         otherInfoPresenter.uiStateObservable.subscribe{
             artistBiography-> updateUi(artistBiography)
@@ -49,18 +47,16 @@ class OtherInfoWindow : Activity() {
     }
 
     private fun getArtistInfoAsync() {
-        val artist = getArtistName()
         Thread {
-            if (artist != null) {
-                getArtistInfo(artist)
-            }
+            getArtistInfo()
         }.start()
     }
 
     private fun getArtistName () = intent.getStringExtra(ARTIST_NAME_EXTRA)
 
-    private fun getArtistInfo(artistName: String){
-        otherInfoPresenter.getArtistInfo(artistName)
+    private fun getArtistInfo(){
+        val artistName = getArtistName()
+        otherInfoPresenter.getArtistInfo(artistName!!)
     }
 
     private fun updateUi (artistBiography: ArtistBiographyUiState){
@@ -83,9 +79,8 @@ class OtherInfoWindow : Activity() {
         Picasso.get().load(imageUrl).into(   lastFMImage  )
     }
 
-    private fun updateArticleText(articleHtlm: String){
-
-        articleTextPane.text = Html.fromHtml(articleHtlm)
+    private fun updateArticleText(articleHtml: String){
+        articleTextPane.text = Html.fromHtml(articleHtml)
     }
 
     companion object {

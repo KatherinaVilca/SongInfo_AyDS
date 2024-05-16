@@ -11,19 +11,23 @@ private const val HEADER = "<html><div width=400>"
 private const val FONT = "<font face=\"arial\">"
 private const val FINAL_HTML = "</font></div></html>"
 internal class ArtistBiographyDescriptionHelperImpl() : ArtistBiographyDescriptionHelper {
-
     override fun getBiography(artistBiography: ArtistBiography): String {
         val textBiography = getTextBiography(artistBiography)
-        return textToHtml( textBiography,artistBiography.artistName)
+        return textToHtml(textBiography, artistBiography.artistName)
     }
 
     private fun getTextBiography(artistBiography: ArtistBiography): String{
+        val prefix = selectPrefix(artistBiography)
+        val text = artistBiography.biography.replace("\\n", "\n")
+        return "$prefix$text"
+    }
+
+    private fun selectPrefix(artistBiography: ArtistBiography): String{
         var prefix =""
         if(artistBiography.isLocallyStorage){
             prefix = "[*]"
         }
-        val text = artistBiography.biography.replace("\\n", "\n")
-        return "$prefix$text"
+        return prefix
     }
 
     private fun textToHtml(text: String, term: String?): String {
@@ -41,5 +45,4 @@ internal class ArtistBiographyDescriptionHelperImpl() : ArtistBiographyDescripti
         builder.append(FINAL_HTML)
         return builder.toString()
     }
-
 }

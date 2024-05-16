@@ -14,24 +14,19 @@ interface OtherInfoPresenter {
 internal class OtherInfoPresenterImpl(
     private val repository: OtherInfoRepository,
     private val artistBiographyDescriptionHelper: ArtistBiographyDescriptionHelper
-
 ) : OtherInfoPresenter{
 
     override val uiStateObservable = Subject<ArtistBiographyUiState>()
     override fun getArtistInfo(artistName: String) {
         val artistBiography = repository.getArtist(artistName)
-        val uiState = toUiState(artistBiography)
+        val uiState = artistBiography.toUiState()
 
         uiStateObservable.notify(uiState)
     }
 
-    private fun toUiState (artistBiography: ArtistBiography): ArtistBiographyUiState{
-        return ArtistBiographyUiState(
-            artistName = artistBiography.artistName,
-            articleUrl = artistBiography.articleUrl,
-            articleHtml = artistBiographyDescriptionHelper.getBiography(artistBiography)
+    private fun ArtistBiography.toUiState() = ArtistBiographyUiState(
+        artistName = artistName,
+        articleUrl = articleUrl,
+        articleHtml = artistBiographyDescriptionHelper.getBiography(this)
         )
-    }
-
-
 }

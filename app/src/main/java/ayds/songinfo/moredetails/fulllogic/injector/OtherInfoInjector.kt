@@ -19,24 +19,23 @@ private const val ARTICLE_DATABASE_NAME = "database-name-thename"
 object OtherInfoInjector {
 
    lateinit var presenter : OtherInfoPresenter
-    fun init(context : Context){
+   fun init(context : Context){
 
-        val retrofit = Retrofit.Builder()
+       val retrofit = Retrofit.Builder()
             .baseUrl(LASTFM_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
-        val lastFMAPI = retrofit.create(LastFMAPI::class.java)
-        val articleDataBase = Room.databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_DATABASE_NAME).build()
-        val lastFMToArtistBiographyResolver = LastFMToArtistBiographyResolverImpl()
+       val lastFMAPI = retrofit.create(LastFMAPI::class.java)
+       val articleDataBase = Room.databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_DATABASE_NAME).build()
+       val lastFMToArtistBiographyResolver = LastFMToArtistBiographyResolverImpl()
 
         // data
-        val service = OtherInfoServiceImpl(lastFMToArtistBiographyResolver,lastFMAPI)
-        val localStorage = OtherInfoLocalStorageImpl(articleDataBase)
-        val repository = OtherInfoRepositoryImpl(localStorage,service)
+       val service = OtherInfoServiceImpl(lastFMToArtistBiographyResolver, lastFMAPI)
+       val localStorage = OtherInfoLocalStorageImpl(articleDataBase)
+       val repository = OtherInfoRepositoryImpl(localStorage, service)
 
-        //presentation
-        val artistBiographyDescriptionHelper = ArtistBiographyDescriptionHelperImpl()
-        //porque lateinit?
-        presenter = OtherInfoPresenterImpl(repository,artistBiographyDescriptionHelper)
-    }
+       //presentation
+       val artistBiographyDescriptionHelper = ArtistBiographyDescriptionHelperImpl()
+       presenter = OtherInfoPresenterImpl(repository, artistBiographyDescriptionHelper)
+   }
 }
