@@ -36,6 +36,7 @@ android {
 dependencies {
 
     implementation(project(":observer"))
+    implementation(project(":external"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -44,9 +45,14 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.picasso)
     implementation(libs.androidx.room)
+    implementation(project(":external"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    //implementation("junit:junit:4.12")
 
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
+
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
