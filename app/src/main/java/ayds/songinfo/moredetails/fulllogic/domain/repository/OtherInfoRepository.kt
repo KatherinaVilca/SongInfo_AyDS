@@ -1,7 +1,7 @@
 package ayds.songinfo.moredetails.fulllogic.domain.repository
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 
 interface OtherInfoRepository {
-    fun getArtist(artistName: String) : ArtistBiography
+    fun getCard(artistName: String) : Card
 }
