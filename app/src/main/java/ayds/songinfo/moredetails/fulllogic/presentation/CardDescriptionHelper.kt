@@ -1,30 +1,30 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import java.util.Locale
 
-interface ArtistBiographyDescriptionHelper{
-    fun getBiography(artistBiography: ArtistBiography) : String
+interface CardDescriptionHelper{
+    fun getContent(artistBiography: Card) : String
 }
 
 private const val HEADER = "<html><div width=400>"
 private const val FONT = "<font face=\"arial\">"
 private const val FINAL_HTML = "</font></div></html>"
-internal class ArtistBiographyDescriptionHelperImpl() : ArtistBiographyDescriptionHelper {
-    override fun getBiography(artistBiography: ArtistBiography): String {
-        val textBiography = getTextBiography(artistBiography)
-        return textToHtml(textBiography, artistBiography.artistName)
+internal class CardDescriptionHelperImpl() : CardDescriptionHelper {
+    override fun getContent(card: Card): String {
+        val textBiography = getTextContent(card)
+        return textToHtml(textBiography, card.artistName)
     }
 
-    private fun getTextBiography(artistBiography: ArtistBiography): String{
-        val prefix = selectPrefix(artistBiography)
-        val text = artistBiography.biography.replace("\\n", "\n")
+    private fun getTextContent(card: Card): String{
+        val prefix = selectPrefix(card)
+        val text = card.text.replace("\\n", "\n")
         return "$prefix$text"
     }
 
-    private fun selectPrefix(artistBiography: ArtistBiography): String{
+    private fun selectPrefix(card: Card): String{
         var prefix =""
-        if(artistBiography.isLocallyStorage){
+        if(card.isLocallyStorage){
             prefix = "[*]"
         }
         return prefix
