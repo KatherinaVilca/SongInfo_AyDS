@@ -1,34 +1,44 @@
 package ayds.songinfo.moredetails.fulllogic.data
 
-import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoService
+import ayds.artist.external.lastFM.data.ArtistBiography
+import ayds.artist.external.lastFM.data.LastFMService
 import ayds.songinfo.moredetails.fulllogic.data.localdb.OtherInfoLocalStorage
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import ayds.songinfo.moredetails.fulllogic.domain.repository.OtherInfoRepository
 
 class OtherInfoRepositoryImpl (
     private val otherInfoLocalStorage: OtherInfoLocalStorage,
-    private val otherInfoService: OtherInfoService
+    private val lastFMService: LastFMService
 ): OtherInfoRepository {
 
-    override fun getArtist(artistName: String): ArtistBiography {
-        val article = otherInfoLocalStorage.getArticle(artistName)
-        val artistBiography: ArtistBiography
+    override fun getCard(artistName: String): Card {
+        val article = otherInfoLocalStorage.getCard(artistName)
+        val card: Card
 
         if(article != null ){
             markArticleAsLocal(article)
-            artistBiography = article
+            card = article
         }
         else {
-            artistBiography = otherInfoService.getArtist(artistName)
-            if( artistBiography.biography.isNotEmpty()){
-                otherInfoLocalStorage.insertArtist(artistBiography)
+            card = lastFMService.getArtist(artistName).toCard()
+            if( card.text.isNotEmpty()){
+                otherInfoLocalStorage.insertCard(card,artistName)
             }
         }
-        return artistBiography
+        return card
     }
 
-    private fun markArticleAsLocal(article: ArtistBiography) {
+    private fun markArticleAsLocal(article: Card) {
         article.isLocallyStorage = true
     }
+
+    private fun ArtistBiography.toCard() =
+        Card(
+            artistName = artistName,
+            text = biography,
+            infoUrl = articleUrl,
+            source = "",
+            sourceLogoUrl = ""
+        )
 
 }
