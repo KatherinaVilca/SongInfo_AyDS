@@ -1,6 +1,5 @@
-package ayds.songinfo.moredetails.fulllogic.data.external
+package ayds.artist.external.lastFM.data
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
@@ -13,7 +12,7 @@ private const val BIO = "bio"
 private const val CONTENT = "content"
 private const val URL = "url"
 private const val NO_RESULT ="No Results"
-internal class LastFMToArtistBiographyResolverImpl : LastFMToArtistBiographyResolver{
+internal class LastFMToArtistBiographyResolverImpl : LastFMToArtistBiographyResolver {
    override fun map (callResponse: String?, artistName: String): ArtistBiography {
         val gson = Gson()
         val jobj = gson.fromJson(callResponse, JsonObject::class.java)
