@@ -27,9 +27,9 @@ data class CardEntity(
 interface CardDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertArticle(article: CardEntity)
+    fun insertCard(card: CardEntity)
 
-    @Query("SELECT * FROM Cardentity WHERE artistName LIKE :artistName LIMIT 1")
-    fun getArticleByArtistName(artistName: String): CardEntity?
+    @Query("SELECT * FROM Cardentity WHERE artistName LIKE :artistName")
+    fun getCardByArtistName(artistName: String): List<CardEntity>?
 
 }
