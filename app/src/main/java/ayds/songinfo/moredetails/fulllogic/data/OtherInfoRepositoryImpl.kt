@@ -1,44 +1,35 @@
 package ayds.songinfo.moredetails.fulllogic.data
 
-import ayds.artist.external.lastFM.data.ArtistBiography
-import ayds.artist.external.lastFM.data.LastFMService
+import ayds.songinfo.moredetails.fulllogic.data.external.CardBroker
 import ayds.songinfo.moredetails.fulllogic.data.localdb.OtherInfoLocalStorage
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import ayds.songinfo.moredetails.fulllogic.domain.repository.OtherInfoRepository
 
 class OtherInfoRepositoryImpl (
     private val otherInfoLocalStorage: OtherInfoLocalStorage,
-    private val lastFMService: LastFMService
+    private val cardBroker: CardBroker
 ): OtherInfoRepository {
 
-    override fun getCard(artistName: String): Card {
-        val article = otherInfoLocalStorage.getCard(artistName)
-        val card: Card
+    override fun getCard(artistName: String): ArrayList<Card> {
+        var cards : ArrayList<Card> = otherInfoLocalStorage.getCard(artistName)!!
+        var listCard = ArrayList<Card>()
 
-        if(article != null ){
-            markArticleAsLocal(article)
-            card = article
+        if (cards.isNotEmpty()) {
+            markCardAsLocal(cards)
         }
-        else {
-            card = lastFMService.getArtist(artistName).toCard()
-            if( card.text.isNotEmpty()){
-                otherInfoLocalStorage.insertCard(card,artistName)
+            else {
+                listCard = cardBroker.getCards(artistName)
+                if( listCard.isNotEmpty()){
+                    otherInfoLocalStorage.insertCard(listCard,artistName)
+                }
             }
+        return listCard
+    }
+
+    private fun markCardAsLocal(cards: ArrayList<Card>) {
+        for (card in cards) {
+            card.isLocallyStorage = true
         }
-        return card
     }
-
-    private fun markArticleAsLocal(article: Card) {
-        article.isLocallyStorage = true
-    }
-
-    private fun ArtistBiography.toCard() =
-        Card(
-            artistName = artistName,
-            text = biography,
-            infoUrl = articleUrl,
-            source = "",
-            sourceLogoUrl = ""
-        )
 
 }
