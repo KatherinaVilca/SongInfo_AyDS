@@ -14,9 +14,17 @@ import com.squareup.picasso.Picasso
 
 class OtherInfoWindow : Activity() {
 
-    private lateinit var articleTextPane: TextView
-    private lateinit var openButtonArticle : Button
-    private lateinit var lastFMImage : ImageView
+    private lateinit var card1TextView: TextView
+    private lateinit var card1buttonOpenArticle: Button
+    private lateinit var card1Image: ImageView
+
+    private lateinit var card2TextView: TextView
+    private lateinit var card2buttonOpenArticle: Button
+    private lateinit var card2Image: ImageView
+
+    private lateinit var card3TextView: TextView
+    private lateinit var card3buttonOpenArticle: Button
+    private lateinit var card3Image: ImageView
 
     private lateinit var otherInfoPresenter: OtherInfoPresenter
 
@@ -26,13 +34,13 @@ class OtherInfoWindow : Activity() {
         initPropertiesView()
         initPresenter()
         observerPresenter()
-        getArtistInfoAsync()
+        getCardsAsync()
     }
 
     private fun initPropertiesView(){
-        articleTextPane = findViewById(R.id.articleTextPane)
-        openButtonArticle = findViewById(R.id.openButtonArticle)
-        lastFMImage = findViewById(R.id.lastFMImage)
+        card1TextView = findViewById(R.id.card1TextView)
+        card1buttonOpenArticle = findViewById(R.id.card1buttonOpenArticle)
+        card1Image = findViewById(R.id.card1Image)
     }
 
     private fun initPresenter(){
@@ -42,33 +50,33 @@ class OtherInfoWindow : Activity() {
 
     private fun observerPresenter(){
         otherInfoPresenter.uiStateObservable.subscribe{
-            artistBiography-> updateUi(artistBiography)
+                cardsUiStates-> updateUi(cardsUiStates)
         }
     }
 
-    private fun getArtistInfoAsync() {
+    private fun getCardsAsync() {
         Thread {
-            getArtistInfo()
+            getCards()
         }.start()
     }
 
     private fun getArtistName () = intent.getStringExtra(ARTIST_NAME_EXTRA)
 
-    private fun getArtistInfo(){
+    private fun getCards(){
         val artistName = getArtistName()
-        otherInfoPresenter.getArtistInfo(artistName!!)
+        otherInfoPresenter.getCardList(artistName!!)
     }
 
-    private fun updateUi (artistBiography: ArtistBiographyUiState){
+    private fun updateUi (listcardUiState: ArrayList<CardUiState>){
         runOnUiThread {
-            updateButtonArticle(artistBiography.articleUrl)
-            updateLogoLastFM(artistBiography.imageUrl)
-            updateArticleText(artistBiography.articleHtml)
+            updateButtonArticle(listcardUiState.first().infoUrl)
+            updateLogoLastFM(listcardUiState.first().imageUrl)
+            updateArticleText(listcardUiState.first().contentHtml)
         }
     }
 
     private fun updateButtonArticle(articleUrl: String){
-        openButtonArticle.setOnClickListener {
+        card1buttonOpenArticle.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(Uri.parse(articleUrl))
             startActivity(intent)
@@ -76,11 +84,11 @@ class OtherInfoWindow : Activity() {
     }
 
     private fun updateLogoLastFM(imageUrl: String){
-        Picasso.get().load(imageUrl).into(   lastFMImage  )
+        Picasso.get().load(imageUrl).into(   card1Image  )
     }
 
     private fun updateArticleText(articleHtml: String){
-        articleTextPane.text = Html.fromHtml(articleHtml)
+        card1TextView.text = Html.fromHtml(articleHtml)
     }
 
     companion object {
