@@ -3,30 +3,39 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import ayds.songinfo.moredetails.fulllogic.domain.repository.OtherInfoRepository
 
 interface OtherInfoPresenter {
 
-    val uiStateObservable: Observable<ArtistBiographyUiState>
-    fun getArtistInfo(artistName: String)
+    val uiStateObservable: Observable<ArrayList<CardUiState>>
+    fun getCardList(artistName: String)
 }
 internal class OtherInfoPresenterImpl(
     private val repository: OtherInfoRepository,
-    private val artistBiographyDescriptionHelper: ArtistBiographyDescriptionHelper
+    private val cardDescriptionHelper: CardDescriptionHelper
 ) : OtherInfoPresenter{
 
-    override val uiStateObservable = Subject<ArtistBiographyUiState>()
-    override fun getArtistInfo(artistName: String) {
-        val artistBiography = repository.getArtist(artistName)
-        val uiState = artistBiography.toUiState()
+    override val uiStateObservable = Subject<ArrayList<CardUiState>>()
+     override fun getCardList(artistName: String) {
+        val cards = repository.getCard(artistName)
+        val cardsUiStates = toUiState(cards)
 
-        uiStateObservable.notify(uiState)
+        uiStateObservable.notify(cardsUiStates)
     }
 
-    private fun ArtistBiography.toUiState() = ArtistBiographyUiState(
-        artistName = artistName,
-        articleUrl = articleUrl,
-        articleHtml = artistBiographyDescriptionHelper.getBiography(this)
-        )
+    private fun toUiState(cards: ArrayList<Card>): ArrayList<CardUiState>{
+        val cardsUiStates = ArrayList<CardUiState>()
+
+        for ( card in cards){
+            cardsUiStates.add(
+                CardUiState(
+                    artistName = card.artistName,
+                    infoUrl = card.infoUrl,
+                    contentHtml = cardDescriptionHelper.getContent(card)
+                )
+            )
+        }
+        return cardsUiStates
+    }
 }
