@@ -1,10 +1,11 @@
 package ayds.songinfo.moredetails.fulllogic.data.external.proxy
 
 import ayds.artist.external.lastFM.data.ArtistBiography
+import ayds.artist.external.lastFM.data.LASTFM_LOGO_URL
 import ayds.artist.external.lastFM.data.LastFMService
+import ayds.artist.external.lastFM.data.SOURCE_LASTFM
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 
-private const val LASTFM = "lastFM"
 class LastFMProxy(
     private val lastFMAPI : LastFMService
 ) : ProxyServiceCard {
@@ -19,7 +20,7 @@ class LastFMProxy(
             artistName = artistName,
             text = biography,
             infoUrl = articleUrl,
-            source = LASTFM,
-            sourceLogoUrl = ""
+            source = SOURCE_LASTFM,
+            sourceLogoUrl = LASTFM_LOGO_URL,
         )
 }
