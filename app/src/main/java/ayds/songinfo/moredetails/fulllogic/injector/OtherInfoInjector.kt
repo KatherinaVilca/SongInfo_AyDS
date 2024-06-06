@@ -3,11 +3,15 @@ package ayds.songinfo.moredetails.fulllogic.injector
 import android.content.Context
 import androidx.room.Room
 import ayds.artist.external.lastFM.injector.LastFMInjector
+import ayds.artist.external.newyorktimes.injector.NYTimesInjector
+import ayds.artist.external.wikipedia.injector.WikipediaInjector
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.data.external.CardBroker
 import ayds.songinfo.moredetails.fulllogic.data.external.CardBrokerImpl
 import ayds.songinfo.moredetails.fulllogic.data.external.proxy.LastFMProxy
+import ayds.songinfo.moredetails.fulllogic.data.external.proxy.NYTimesProxy
 import ayds.songinfo.moredetails.fulllogic.data.external.proxy.ProxyServiceCard
+import ayds.songinfo.moredetails.fulllogic.data.external.proxy.WikipediaProxy
 import ayds.songinfo.moredetails.fulllogic.data.localdb.CardDatabase
 import ayds.songinfo.moredetails.fulllogic.data.localdb.OtherInfoLocalStorageImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.CardDescriptionHelperImpl
@@ -28,10 +32,16 @@ object OtherInfoInjector {
 
         // data
        ///Broker
-       val lastFMService = LastFMInjector.lastFMService
-       val lastFMProxy : ProxyServiceCard = LastFMProxy(lastFMService)
+       val services = ArrayList<ProxyServiceCard> ()
+       val lastFMProxy : ProxyServiceCard = LastFMProxy(LastFMInjector.lastFMService)
+       val nyTimesProxy = NYTimesProxy(NYTimesInjector.nyTimesService)
+       val wikipediaProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
 
-       val cardBroker : CardBroker = CardBrokerImpl(lastFMProxy)
+       services.add(lastFMProxy)
+       services.add(nyTimesProxy)
+       services.add(wikipediaProxy)
+
+       val cardBroker : CardBroker = CardBrokerImpl(services)
 
        val localStorage = OtherInfoLocalStorageImpl(articleDataBase)
        val repository = OtherInfoRepositoryImpl(localStorage, cardBroker)
