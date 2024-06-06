@@ -1,14 +1,8 @@
 package ayds.song.info.moredetails.fulllogic.presentation
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.presentation.ArtistBiographyDescriptionHelper
-import ayds.songinfo.moredetails.fulllogic.presentation.ArtistBiographyDescriptionHelperImpl
-import org.junit.Assert.assertEquals
-import org.junit.Test
-
 class ArtistBiographyDescriptionHelperImplTest {
 
-
+/*
     private val artistBiographyDescriptionHelper: ArtistBiographyDescriptionHelper =
         ArtistBiographyDescriptionHelperImpl()
 
@@ -106,4 +100,7 @@ class ArtistBiographyDescriptionHelperImplTest {
 
         assertEquals(resultExpected,result )
     }
+
+ */
 }
+

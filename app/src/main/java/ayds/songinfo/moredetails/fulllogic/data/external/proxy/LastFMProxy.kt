@@ -3,8 +3,9 @@ package ayds.songinfo.moredetails.fulllogic.data.external.proxy
 import ayds.artist.external.lastFM.data.ArtistBiography
 import ayds.artist.external.lastFM.data.LASTFM_LOGO_URL
 import ayds.artist.external.lastFM.data.LastFMService
-import ayds.artist.external.lastFM.data.SOURCE_LASTFM
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
+
+const val SOURCE_LASTFM = "lastFM"
 
 class LastFMProxy(
     private val lastFMAPI : LastFMService
@@ -16,7 +17,7 @@ class LastFMProxy(
     }
 
     private fun ArtistBiography.toCard() =
-        Card(
+        Card.CardData(
             artistName = artistName,
             text = biography,
             infoUrl = articleUrl,
