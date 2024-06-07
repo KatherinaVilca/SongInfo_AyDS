@@ -11,11 +11,11 @@ class OtherInfoRepositoryImpl (
 ): OtherInfoRepository {
 
     override fun getCard(artistName: String): ArrayList<Card> {
-        var cards : ArrayList<Card> = otherInfoLocalStorage.getCard(artistName)!!
-        var listCard = ArrayList<Card>()
+        var listCard : ArrayList<Card> = otherInfoLocalStorage.getCard(artistName)!!
 
-        if (cards.isNotEmpty()) {
-            markCardAsLocal(cards)
+
+        if (listCard.isNotEmpty()) {
+            markCardAsLocal(listCard)
         }
             else {
                 listCard = cardBroker.getCards(artistName)
@@ -28,7 +28,9 @@ class OtherInfoRepositoryImpl (
 
     private fun markCardAsLocal(cards: ArrayList<Card>) {
         for (card in cards) {
-            card.isLocallyStorage = true
+            if( card is Card.CardData) {
+                card.isLocallyStorage = true
+            }
         }
     }
 
