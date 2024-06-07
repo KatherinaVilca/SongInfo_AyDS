@@ -8,11 +8,14 @@ interface CardBroker{
 }
 
 internal class CardBrokerImpl(
-    private val proxyServiceA: ProxyServiceCard,
+    private val services : ArrayList<ProxyServiceCard>
 ) : CardBroker {
     override fun getCards(artistName: String):ArrayList<Card> {
        val listCard = ArrayList<Card>()
-        listCard.add(proxyServiceA.getCard(artistName))
+
+        for (proxy in services) {
+            listCard.add(proxy.getCard(artistName))
+        }
         return listCard
     }
 }
