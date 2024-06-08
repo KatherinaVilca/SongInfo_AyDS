@@ -17,6 +17,7 @@ internal class OtherInfoPresenterImpl(
 ) : OtherInfoPresenter{
 
     override val uiStateObservable = Subject<ArrayList<CardUiState>>()
+
      override fun getCardList(artistName: String) {
         val cards = repository.getCard(artistName)
         val cardsUiStates = toUiState(cards)
@@ -28,13 +29,16 @@ internal class OtherInfoPresenterImpl(
         val cardsUiStates = ArrayList<CardUiState>()
 
         for ( card in cards){
-            cardsUiStates.add(
-                CardUiState(
-                    artistName = card.artistName,
-                    infoUrl = card.infoUrl,
-                    contentHtml = cardDescriptionHelper.getContent(card)
+            if(card is Card.CardData) {
+                cardsUiStates.add(
+                    CardUiState(
+                        artistName = card.artistName,
+                        infoUrl = card.infoUrl,
+                        contentHtml = cardDescriptionHelper.getContent(card),
+                        imageUrl = card.sourceLogoUrl
+                    )
                 )
-            )
+            }
         }
         return cardsUiStates
     }

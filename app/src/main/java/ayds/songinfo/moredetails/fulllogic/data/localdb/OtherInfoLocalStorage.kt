@@ -19,12 +19,13 @@ internal class OtherInfoLocalStorageImpl (
         if (cardsEntities != null) {
             for (cardEntity in cardsEntities) {
                 cards.add(
-                    Card(
+                    Card.CardData(
                         cardEntity.artistName,
                         cardEntity.text,
                         cardEntity.url,
                         cardEntity.source,
-                        "")
+                       cardEntity.sourceLogoUrl,
+                        )
                 )}
         }
         return cards
@@ -32,14 +33,17 @@ internal class OtherInfoLocalStorageImpl (
 
     override fun insertCard(listCard: ArrayList<Card>, artistName: String) {
         for (card in listCard) {
-            cardDataBase.CardDao().insertCard(
-                CardEntity(
-                    card.artistName,
-                    card.text,
-                    card.infoUrl,
-                    card.source
+            if (card is Card.CardData) {
+                cardDataBase.CardDao().insertCard(
+                    CardEntity(
+                        card.artistName,
+                        card.text,
+                        card.infoUrl,
+                        card.source,
+                        card.sourceLogoUrl
+                    )
                 )
-            )
+            }
         }
     }
 }

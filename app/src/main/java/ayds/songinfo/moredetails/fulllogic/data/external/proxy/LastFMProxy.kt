@@ -13,15 +13,23 @@ class LastFMProxy(
 
     override fun getCard(artisName: String): Card {
         val artistBiography = lastFMAPI.getArtist(artisName)
-        return artistBiography.toCard()
+        return createCard(artistBiography)
     }
 
-    private fun ArtistBiography.toCard() =
-        Card.CardData(
-            artistName = artistName,
-            text = biography,
-            infoUrl = articleUrl,
-            source = SOURCE_LASTFM,
-            sourceLogoUrl = LASTFM_LOGO_URL,
-        )
+    private fun createCard(artistBiography: ArtistBiography) : Card {
+        if(artistBiography.biography.isNotEmpty()) {
+            return Card.CardData(
+                artistName = artistBiography.artistName,
+                text = artistBiography.biography,
+                infoUrl = artistBiography.articleUrl,
+                source = SOURCE_LASTFM,
+                sourceLogoUrl = LASTFM_LOGO_URL,
+            )
+        }
+        else {
+            return Card.EmptyCard(
+                source = SOURCE_LASTFM
+            )
+        }
+    }
 }

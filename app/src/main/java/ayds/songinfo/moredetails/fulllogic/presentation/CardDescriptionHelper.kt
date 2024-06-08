@@ -12,19 +12,25 @@ private const val FONT = "<font face=\"arial\">"
 private const val FINAL_HTML = "</font></div></html>"
 internal class CardDescriptionHelperImpl() : CardDescriptionHelper {
     override fun getContent(card: Card): String {
+        if( card is Card.CardData){
         val textBiography = getTextContent(card)
-        return textToHtml(textBiography, card.artistName)
+          return  textToHtml(textBiography, card.artistName)
+        }
+        return "No result"
     }
 
     private fun getTextContent(card: Card): String{
         val prefix = selectPrefix(card)
-        val text = card.text.replace("\\n", "\n")
+        var text = ""
+        if(card is Card.CardData) {
+            text = card.text.replace("\\n", "\n")
+        }
         return "$prefix$text"
     }
 
     private fun selectPrefix(card: Card): String{
         var prefix =""
-        if(card.isLocallyStorage){
+        if(card is Card.CardData && card.isLocallyStorage){
             prefix = "[*]"
         }
         return prefix
