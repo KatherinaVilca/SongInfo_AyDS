@@ -14,7 +14,7 @@ sealed class Card{
           val artistName: String = NO_RESULT,
           val text: String = NO_RESULT,
           val infoUrl: String = NO_RESULT,
-          val source: String = NO_RESULT,
+          val source: String,
           val sourceLogoUrl: String = NO_RESULT,
           var isLocallyStorage: Boolean = false,
 
